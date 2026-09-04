@@ -3,10 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <title>Leo Nifelheim — Weekly Schedule</title>
+
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: #000; display: flex; justify-content: center; align-items: flex-start; }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
 
   .row-hover {
     position: absolute;
@@ -16,229 +28,917 @@
     transition: background 0.25s ease;
     cursor: default;
   }
-  .row-hover:hover { background: rgba(255,255,255,0.04); }
-  .row-hover.today  { background: rgba(255,255,255,0.04); }
 
-  .day-name, .day-sub, .day-time, .logo-wrap {
+  .row-hover:hover {
+    background: rgba(255,255,255,0.04);
+  }
+
+  .row-hover.today {
+    background: rgba(255,255,255,0.04);
+  }
+
+  .day-name,
+  .day-sub,
+  .day-time,
+  .logo-wrap {
     transition: filter 0.25s, opacity 0.25s;
+  }
+
+  /* ============================================================
+     CONTORNO PARA LOGOS OSCUROS
+     ============================================================ */
+
+  .logo-outline {
+    filter:
+      drop-shadow(1px 0 0 rgba(255,255,255,0.75))
+      drop-shadow(-1px 0 0 rgba(255,255,255,0.75))
+      drop-shadow(0 1px 0 rgba(255,255,255,0.75))
+      drop-shadow(0 -1px 0 rgba(255,255,255,0.75))
+      drop-shadow(0 0 3px rgba(255,255,255,0.30));
   }
 </style>
 </head>
+
 <body>
+
 <script>
 /* ============================================================
    CONFIG — EDITA AQUÍ CADA SEMANA
    ============================================================ */
+
 const CONFIG = {
   background: "bg-calendar.png",
-  title:    "WEEKLY\nSCHEDULE",
+
+  title: "WEEKLY\nSCHEDULE",
+
   subtitle: "LEO NIFELHEIM  ◆  JRPG / RPG  ◆  ENG / ESP",
+
   footnote: "* UTC+2 / CET  ·  Times may vary",
+
   days: [
-    { name: "Monday",    category: "challenge", logo: "ff5.png",  subtitle: "FFV - Lv.1 Challenge Run",   timeStart: "19:00", timeEnd: "22:00" },
-    { name: "Tuesday",   category: "main-a",    logo: "zelda.png",  subtitle: "The Legend of Zelda: Tears of the Kingdom",             timeStart: "19:00", timeEnd: "22:00" },
-    { name: "Wednesday", category: "main-a",    logo: "bg3.png",  subtitle: "Baldur's Gate 3 - Collab",             timeStart: "18:00", timeEnd: "22:00" },
-    { name: "Thursday",  category: "main-b",    logo: "elliot.png",  subtitle: "The Adventures of Elliot: The Millenium Tales",             timeStart: "19:00", timeEnd: "22:00" },
-    { name: "Friday",    category: "main-b",    logo: "elliot.png",  subtitle: "The Adventures of Elliot: The Millenium Tales",             timeStart: "19:00", timeEnd: "22:00" },
-    { name: "Saturday",  category: "retro",     logo: "ff6.png", subtitle: "Final Fantasy VI",   timeStart: "19:00", timeEnd: "22:00" },
-    { name: "Sunday",    category: "retro",     logo: "ff6.png", subtitle: "Final Fantasy VI",   timeStart: "19:00", timeEnd: "22:00" },
+    {
+      name: "Monday",
+      category: "challenge",
+      logo: "ff5.png",
+      subtitle: "FFV - Crystal Roulette Fiesta",
+      timeStart: "19:00",
+      timeEnd: "22:00"
+    },
+
+    {
+      name: "Tuesday",
+      category: "main-a",
+      logo: "zelda.png",
+      subtitle: "The Legend of Zelda: Tears of the Kingdom",
+      timeStart: "19:00",
+      timeEnd: "22:00"
+    },
+
+    {
+      name: "Wednesday",
+      category: "main-a",
+      logo: "bg3.png",
+      subtitle: "Baldur's Gate 3 - Collab",
+      timeStart: "18:00",
+      timeEnd: "22:00"
+    },
+
+    {
+      name: "Thursday",
+      category: "main-b",
+      logo: "elliot.png",
+      logoOutline: true,
+      subtitle: "The Adventures of Elliot: The Millenium Tales",
+      timeStart: "19:00",
+      timeEnd: "22:00"
+    },
+
+    {
+      name: "Friday",
+      category: "main-b",
+      logo: "elliot.png",
+      logoOutline: true,
+      subtitle: "The Adventures of Elliot: The Millenium Tales",
+      timeStart: "19:00",
+      timeEnd: "22:00"
+    },
+
+    {
+      name: "Saturday",
+      category: "retro",
+      logo: "ff6.png",
+      logoOutline: true,
+      subtitle: "Final Fantasy VI",
+      timeStart: "19:00",
+      timeEnd: "22:00"
+    },
+
+    {
+      name: "Sunday",
+      category: "retro",
+      logo: "ff6.png",
+      logoOutline: true,
+      subtitle: "Final Fantasy VI",
+      timeStart: "19:00",
+      timeEnd: "22:00"
+    }
   ]
 };
+
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
 
 const LAYOUT = {
   imgW: 1023,
   imgH: 1537,
-  titleTop:     60,
-  titleSize:    52,
-  subtitleTop:  258,
+
+  titleTop: 60,
+  titleSize: 52,
+
+  subtitleTop: 258,
   subtitleSize: 13,
-  rows:       [361, 514, 669, 822, 975, 1128, 1284],
-  rowHeights: [143, 145, 144, 144, 143,  139,  122],
+
+  rows: [
+    361,
+    514,
+    669,
+    822,
+    975,
+    1128,
+    1284
+  ],
+
+  rowHeights: [
+    143,
+    145,
+    144,
+    144,
+    143,
+    139,
+    122
+  ],
+
   rowH: 143,
-  badgeW:      202,
+
+  badgeW: 202,
+
   contentLeft: 222,
-  contentW:    718,
-  dayNameOff:  28,
+  contentW: 718,
+
+  dayNameOff: 28,
   subtitleOff: 78,
-  footnoteTop:   342,
-  footnoteRight: 48,
+
+  footnoteTop: 342,
+  footnoteRight: 48
 };
+
+
+/* ============================================================
+   COLORES POR CATEGORÍA
+   ============================================================ */
 
 const CAT_COLORS = {
   "challenge": "#c8920a",
-  "main-a":    "#cc3030",
-  "main-b":    "#8844cc",
-  "retro":     "#3a9aaa",
+  "main-a": "#cc3030",
+  "main-b": "#8844cc",
+  "retro": "#3a9aaa"
 };
 
-/* Día de hoy -> índice del array (0=lunes ... 6=domingo) */
-const JS_DAY   = new Date().getDay(); // 0=domingo, 1=lunes ... 6=sábado
-const DAY_MAP  = [6, 0, 1, 2, 3, 4, 5]; // convierte JS day -> índice CONFIG.days
-const TODAY_I  = DAY_MAP[JS_DAY];
 
-function highlightRow(rowDiv, nameEl, subEl, logoWrap, times) {
-  rowDiv.style.background = 'rgba(255,255,255,0.04)';
-  nameEl.style.filter = 'brightness(1.8)';
-  if (subEl)    { subEl.style.filter = 'brightness(1.8)'; subEl.style.opacity = '1'; }
-  if (logoWrap) logoWrap.style.filter = 'brightness(1.3)';
-  times.forEach(e => e.style.filter = 'brightness(1.8)');
-}
+/* ============================================================
+   DÍA ACTUAL
+   ============================================================ */
 
-function unhighlightRow(rowDiv, nameEl, subEl, logoWrap, times) {
-  rowDiv.style.background = '';
-  nameEl.style.filter = '';
-  if (subEl)    { subEl.style.filter = ''; subEl.style.opacity = '0.9'; }
-  if (logoWrap) logoWrap.style.filter = '';
-  times.forEach(e => e.style.filter = '');
-}
+/*
+  JavaScript:
+  0 = domingo
+  1 = lunes
+  2 = martes
+  ...
+  6 = sábado
 
-window.addEventListener('DOMContentLoaded', () => {
-  const L = LAYOUT;
-  const W = L.imgW;
-  const H = L.imgH;
+  Nuestro array:
+  0 = lunes
+  ...
+  6 = domingo
+*/
 
-  const container = document.createElement('div');
-  container.style.cssText = `position:relative;width:${W}px;height:${H}px;font-family:'Press Start 2P',monospace;overflow:hidden;`;
+const JS_DAY = new Date().getDay();
 
-  const bg = document.createElement('img');
-  bg.src = CONFIG.background;
-  bg.style.cssText = `position:absolute;top:0;left:0;width:${W}px;height:${H}px;display:block;`;
-  container.appendChild(bg);
+const DAY_MAP = [
+  6, // domingo
+  0, // lunes
+  1, // martes
+  2, // miércoles
+  3, // jueves
+  4, // viernes
+  5  // sábado
+];
 
-  function el(styles, text, className) {
-    const d = document.createElement('div');
-    Object.assign(d.style, styles);
-    if (className) d.className = className;
-    if (text !== undefined) d.textContent = text;
-    return d;
+const TODAY_I = DAY_MAP[JS_DAY];
+
+
+/* ============================================================
+   HIGHLIGHT
+   ============================================================ */
+
+function highlightRow(
+  rowDiv,
+  nameEl,
+  subEl,
+  logoWrap,
+  times
+) {
+
+  rowDiv.style.background =
+    'rgba(255,255,255,0.04)';
+
+  nameEl.style.filter =
+    'brightness(1.8)';
+
+  if (subEl) {
+    subEl.style.filter =
+      'brightness(1.8)';
+
+    subEl.style.opacity =
+      '1';
   }
 
-  /* TÍTULO */
-  container.appendChild(el({
-    position:'absolute', top:L.titleTop+'px', left:'0', width:W+'px',
-    textAlign:'center', fontSize:L.titleSize+'px', color:'#c8c0a0',
-    textShadow:'3px 3px 0 #000', letterSpacing:'6px', lineHeight:'1.35', whiteSpace:'pre-line',
-  }, CONFIG.title));
+  if (logoWrap) {
+    logoWrap.style.filter =
+      'brightness(1.3)';
+  }
 
-  /* SUBTÍTULO */
-  container.appendChild(el({
-    position:'absolute', top:L.subtitleTop+'px', left:'0', width:W+'px',
-    textAlign:'center', fontSize:L.subtitleSize+'px', color:'#9090b8', letterSpacing:'3px',
-  }, CONFIG.subtitle));
-
-  /* NOTA UTC */
-  container.appendChild(el({
-    position:'absolute', top:L.footnoteTop+'px', right:L.footnoteRight+'px',
-    fontSize:'11px', color:'#9090b8', letterSpacing:'1px', textAlign:'right',
-  }, CONFIG.footnote));
-
-  /* FILAS */
-  CONFIG.days.forEach((day, i) => {
-    const rowTop  = L.rows[i];
-    const color   = CAT_COLORS[day.category] || '#aaa';
-    const hasLogo = !!day.logo;
-    const isToday = (i === TODAY_I);
-
-    /* Contenedor hover */
-    const rowDiv = document.createElement('div');
-    rowDiv.className = 'row-hover';
-    rowDiv.style.top    = rowTop + 'px';
-    rowDiv.style.height = L.rowHeights[i] + 'px';
-    container.appendChild(rowDiv);
-
-    /* Logo */
-    let logoWrap = null;
-    if (hasLogo) {
-      logoWrap = document.createElement('div');
-      logoWrap.className = 'logo-wrap';
-      logoWrap.style.cssText = `
-        position: absolute;
-        top: ${rowTop}px;
-        left: 450px;
-        width: 397px;
-        height: ${L.rowHeights[i]}px;
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        pointer-events: none;
-      `;
-      const logoImg = document.createElement('img');
-      logoImg.src = day.logo;
-      logoImg.style.cssText = `max-width:100%;max-height:90px;object-fit:contain;margin-bottom:20px;`;
-      logoWrap.appendChild(logoImg);
-      container.appendChild(logoWrap);
-    }
-
-    /* Nombre del día */
-    const nameEl = el({
-      position:'absolute',
-      top:(rowTop + L.dayNameOff)+'px',
-      left:L.contentLeft+'px',
-      width:L.contentW+'px',
-      fontSize:'24px', color:'#c8c0a8', letterSpacing:'2px',
-      pointerEvents:'none',
-    }, day.name, 'day-name');
-    container.appendChild(nameEl);
-
-    /* Subtítulo */
-    let subEl = null;
-    if (day.subtitle) {
-      subEl = el({
-        position:'absolute',
-        top:(rowTop + L.subtitleOff)+'px',
-        left:L.contentLeft+'px',
-        width:L.contentW+'px',
-        fontSize:'10px', color:color, letterSpacing:'1px', opacity:'0.9',
-        pointerEvents:'none',
-      }, day.subtitle, 'day-sub');
-      container.appendChild(subEl);
-    }
-
-    /* Horarios */
-    const rH        = L.rowHeights[i];
-    const tStartOff = Math.round(rH * 0.22);
-    const tEndOff   = Math.round(rH * 0.72);
-    const tSepOff   = Math.round(rH * 0.47);
-
-    const t1 = el({
-      position:'absolute', top:(rowTop + tStartOff)+'px',
-      left:'847px', width:'132px', textAlign:'center',
-      fontSize:'15px', color:'#6a6a8a', letterSpacing:'1px', lineHeight:'1',
-      pointerEvents:'none',
-    }, day.timeStart, 'day-time');
-    container.appendChild(t1);
-
-    const sep = el({
-      position:'absolute', top:(rowTop + tSepOff)+'px',
-      left:'847px', width:'132px', textAlign:'center',
-      fontSize:'13px', color:'#3a3a55', lineHeight:'1',
-      pointerEvents:'none',
-    }, '—', 'day-time');
-    container.appendChild(sep);
-
-    const t2 = el({
-      position:'absolute', top:(rowTop + tEndOff)+'px',
-      left:'847px', width:'132px', textAlign:'center',
-      fontSize:'15px', color:'#6a6a8a', letterSpacing:'1px', lineHeight:'1',
-      pointerEvents:'none',
-    }, day.timeEnd, 'day-time');
-    container.appendChild(t2);
-
-    const times = [t1, sep, t2];
-
-    /* Hover */
-    rowDiv.addEventListener('mouseenter', () => highlightRow(rowDiv, nameEl, subEl, logoWrap, times));
-    rowDiv.addEventListener('mouseleave', () => {
-      if (!isToday) unhighlightRow(rowDiv, nameEl, subEl, logoWrap, times);
-    });
-
-    /* Día de hoy — iluminado por defecto */
-    if (isToday) highlightRow(rowDiv, nameEl, subEl, logoWrap, times);
+  times.forEach(e => {
+    e.style.filter =
+      'brightness(1.8)';
   });
+}
 
-  document.body.appendChild(container);
-});
+
+function unhighlightRow(
+  rowDiv,
+  nameEl,
+  subEl,
+  logoWrap,
+  times
+) {
+
+  rowDiv.style.background = '';
+
+  nameEl.style.filter = '';
+
+  if (subEl) {
+    subEl.style.filter = '';
+    subEl.style.opacity = '0.9';
+  }
+
+  if (logoWrap) {
+    logoWrap.style.filter = '';
+  }
+
+  times.forEach(e => {
+    e.style.filter = '';
+  });
+}
+
+
+/* ============================================================
+   CREACIÓN DEL CALENDARIO
+   ============================================================ */
+
+window.addEventListener(
+  'DOMContentLoaded',
+  () => {
+
+    const L = LAYOUT;
+
+    const W = L.imgW;
+    const H = L.imgH;
+
+
+    /* CONTENEDOR PRINCIPAL */
+
+    const container =
+      document.createElement('div');
+
+    container.style.cssText = `
+      position: relative;
+      width: ${W}px;
+      height: ${H}px;
+      font-family: 'Press Start 2P', monospace;
+      overflow: hidden;
+    `;
+
+
+    /* FONDO */
+
+    const bg =
+      document.createElement('img');
+
+    bg.src =
+      CONFIG.background;
+
+    bg.style.cssText = `
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: ${W}px;
+      height: ${H}px;
+      display: block;
+    `;
+
+    container.appendChild(bg);
+
+
+    /* FUNCIÓN AUXILIAR */
+
+    function el(
+      styles,
+      text,
+      className
+    ) {
+
+      const d =
+        document.createElement('div');
+
+      Object.assign(
+        d.style,
+        styles
+      );
+
+      if (className) {
+        d.className =
+          className;
+      }
+
+      if (text !== undefined) {
+        d.textContent =
+          text;
+      }
+
+      return d;
+    }
+
+
+    /* ========================================================
+       TÍTULO
+       ======================================================== */
+
+    container.appendChild(
+      el(
+        {
+          position: 'absolute',
+          top: L.titleTop + 'px',
+          left: '0',
+          width: W + 'px',
+
+          textAlign: 'center',
+
+          fontSize:
+            L.titleSize + 'px',
+
+          color: '#c8c0a0',
+
+          textShadow:
+            '3px 3px 0 #000',
+
+          letterSpacing: '6px',
+
+          lineHeight: '1.35',
+
+          whiteSpace: 'pre-line'
+        },
+
+        CONFIG.title
+      )
+    );
+
+
+    /* ========================================================
+       SUBTÍTULO GENERAL
+       ======================================================== */
+
+    container.appendChild(
+      el(
+        {
+          position: 'absolute',
+
+          top:
+            L.subtitleTop + 'px',
+
+          left: '0',
+
+          width:
+            W + 'px',
+
+          textAlign:
+            'center',
+
+          fontSize:
+            L.subtitleSize + 'px',
+
+          color:
+            '#9090b8',
+
+          letterSpacing:
+            '3px'
+        },
+
+        CONFIG.subtitle
+      )
+    );
+
+
+    /* ========================================================
+       NOTA UTC
+       ======================================================== */
+
+    container.appendChild(
+      el(
+        {
+          position:
+            'absolute',
+
+          top:
+            L.footnoteTop + 'px',
+
+          right:
+            L.footnoteRight + 'px',
+
+          fontSize:
+            '11px',
+
+          color:
+            '#9090b8',
+
+          letterSpacing:
+            '1px',
+
+          textAlign:
+            'right'
+        },
+
+        CONFIG.footnote
+      )
+    );
+
+
+    /* ========================================================
+       FILAS
+       ======================================================== */
+
+    CONFIG.days.forEach(
+      (day, i) => {
+
+        const rowTop =
+          L.rows[i];
+
+        const color =
+          CAT_COLORS[day.category]
+          || '#aaa';
+
+        const hasLogo =
+          !!day.logo;
+
+        const isToday =
+          i === TODAY_I;
+
+
+        /* ====================================================
+           CONTENEDOR HOVER
+           ==================================================== */
+
+        const rowDiv =
+          document.createElement('div');
+
+        rowDiv.className =
+          'row-hover';
+
+        rowDiv.style.top =
+          rowTop + 'px';
+
+        rowDiv.style.height =
+          L.rowHeights[i] + 'px';
+
+        container.appendChild(
+          rowDiv
+        );
+
+
+        /* ====================================================
+           LOGO
+           ==================================================== */
+
+        let logoWrap = null;
+
+        if (hasLogo) {
+
+          logoWrap =
+            document.createElement('div');
+
+          logoWrap.className =
+            'logo-wrap';
+
+          logoWrap.style.cssText = `
+            position: absolute;
+            top: ${rowTop}px;
+            left: 450px;
+
+            width: 397px;
+            height: ${L.rowHeights[i]}px;
+
+            overflow: hidden;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            pointer-events: none;
+          `;
+
+
+          const logoImg =
+            document.createElement('img');
+
+          logoImg.src =
+            day.logo;
+
+          /*
+             Si logoOutline está activado,
+             añadimos el contorno blanco.
+          */
+
+          if (day.logoOutline) {
+            logoImg.classList.add(
+              'logo-outline'
+            );
+          }
+
+
+          logoImg.style.cssText += `
+            max-width: 100%;
+            max-height: 90px;
+            object-fit: contain;
+            margin-bottom: 20px;
+          `;
+
+
+          logoWrap.appendChild(
+            logoImg
+          );
+
+          container.appendChild(
+            logoWrap
+          );
+        }
+
+
+        /* ====================================================
+           NOMBRE DEL DÍA
+           ==================================================== */
+
+        const nameEl =
+          el(
+            {
+              position:
+                'absolute',
+
+              top:
+                (
+                  rowTop
+                  + L.dayNameOff
+                )
+                + 'px',
+
+              left:
+                L.contentLeft
+                + 'px',
+
+              width:
+                L.contentW
+                + 'px',
+
+              fontSize:
+                '24px',
+
+              color:
+                '#c8c0a8',
+
+              letterSpacing:
+                '2px',
+
+              pointerEvents:
+                'none'
+            },
+
+            day.name,
+
+            'day-name'
+          );
+
+        container.appendChild(
+          nameEl
+        );
+
+
+        /* ====================================================
+           SUBTÍTULO DEL JUEGO
+           ==================================================== */
+
+        let subEl = null;
+
+        if (day.subtitle) {
+
+          subEl =
+            el(
+              {
+                position:
+                  'absolute',
+
+                top:
+                  (
+                    rowTop
+                    + L.subtitleOff
+                  )
+                  + 'px',
+
+                left:
+                  L.contentLeft
+                  + 'px',
+
+                width:
+                  L.contentW
+                  + 'px',
+
+                fontSize:
+                  '10px',
+
+                color:
+                  color,
+
+                letterSpacing:
+                  '1px',
+
+                opacity:
+                  '0.9',
+
+                pointerEvents:
+                  'none'
+              },
+
+              day.subtitle,
+
+              'day-sub'
+            );
+
+          container.appendChild(
+            subEl
+          );
+        }
+
+
+        /* ====================================================
+           HORARIOS
+           ==================================================== */
+
+        const rH =
+          L.rowHeights[i];
+
+        const tStartOff =
+          Math.round(
+            rH * 0.22
+          );
+
+        const tEndOff =
+          Math.round(
+            rH * 0.72
+          );
+
+        const tSepOff =
+          Math.round(
+            rH * 0.47
+          );
+
+
+        /* HORA INICIO */
+
+        const t1 =
+          el(
+            {
+              position:
+                'absolute',
+
+              top:
+                (
+                  rowTop
+                  + tStartOff
+                )
+                + 'px',
+
+              left:
+                '847px',
+
+              width:
+                '132px',
+
+              textAlign:
+                'center',
+
+              fontSize:
+                '15px',
+
+              color:
+                '#6a6a8a',
+
+              letterSpacing:
+                '1px',
+
+              lineHeight:
+                '1',
+
+              pointerEvents:
+                'none'
+            },
+
+            day.timeStart,
+
+            'day-time'
+          );
+
+        container.appendChild(t1);
+
+
+        /* SEPARADOR */
+
+        const sep =
+          el(
+            {
+              position:
+                'absolute',
+
+              top:
+                (
+                  rowTop
+                  + tSepOff
+                )
+                + 'px',
+
+              left:
+                '847px',
+
+              width:
+                '132px',
+
+              textAlign:
+                'center',
+
+              fontSize:
+                '13px',
+
+              color:
+                '#3a3a55',
+
+              lineHeight:
+                '1',
+
+              pointerEvents:
+                'none'
+            },
+
+            '—',
+
+            'day-time'
+          );
+
+        container.appendChild(sep);
+
+
+        /* HORA FIN */
+
+        const t2 =
+          el(
+            {
+              position:
+                'absolute',
+
+              top:
+                (
+                  rowTop
+                  + tEndOff
+                )
+                + 'px',
+
+              left:
+                '847px',
+
+              width:
+                '132px',
+
+              textAlign:
+                'center',
+
+              fontSize:
+                '15px',
+
+              color:
+                '#6a6a8a',
+
+              letterSpacing:
+                '1px',
+
+              lineHeight:
+                '1',
+
+              pointerEvents:
+                'none'
+            },
+
+            day.timeEnd,
+
+            'day-time'
+          );
+
+        container.appendChild(t2);
+
+
+        const times = [
+          t1,
+          sep,
+          t2
+        ];
+
+
+        /* ====================================================
+           HOVER
+           ==================================================== */
+
+        rowDiv.addEventListener(
+          'mouseenter',
+          () => {
+
+            highlightRow(
+              rowDiv,
+              nameEl,
+              subEl,
+              logoWrap,
+              times
+            );
+
+          }
+        );
+
+
+        rowDiv.addEventListener(
+          'mouseleave',
+          () => {
+
+            if (!isToday) {
+
+              unhighlightRow(
+                rowDiv,
+                nameEl,
+                subEl,
+                logoWrap,
+                times
+              );
+
+            }
+
+          }
+        );
+
+
+        /* ====================================================
+           DÍA DE HOY ILUMINADO POR DEFECTO
+           ==================================================== */
+
+        if (isToday) {
+
+          highlightRow(
+            rowDiv,
+            nameEl,
+            subEl,
+            logoWrap,
+            times
+          );
+
+        }
+
+      }
+    );
+
+
+    document.body.appendChild(
+      container
+    );
+
+  }
+);
+
 </script>
+
 </body>
 </html>
