@@ -44,10 +44,7 @@
     transition: filter 0.25s, opacity 0.25s;
   }
 
-  /* ============================================================
-     CONTORNO PARA LOGOS OSCUROS
-     ============================================================ */
-
+  /* Contorno para logos oscuros */
   .logo-outline {
     filter:
       drop-shadow(1px 0 0 rgba(255,255,255,0.75))
@@ -62,11 +59,13 @@
 <body>
 
 <script>
+
 /* ============================================================
    CONFIG — EDITA AQUÍ CADA SEMANA
    ============================================================ */
 
 const CONFIG = {
+
   background: "bg-calendar.png",
 
   title: "WEEKLY\nSCHEDULE",
@@ -76,10 +75,15 @@ const CONFIG = {
   footnote: "* UTC+2 / CET  ·  Times may vary",
 
   days: [
+
     {
       name: "Monday",
       category: "challenge",
       logo: "ff5.png",
+
+      /* FFV era demasiado grande */
+      logoScale: 0.78,
+
       subtitle: "FFV - Crystal Roulette Fiesta",
       timeStart: "19:00",
       timeEnd: "22:00"
@@ -89,6 +93,8 @@ const CONFIG = {
       name: "Tuesday",
       category: "main-a",
       logo: "zelda.png",
+      logoScale: 1,
+
       subtitle: "The Legend of Zelda: Tears of the Kingdom",
       timeStart: "19:00",
       timeEnd: "22:00"
@@ -98,6 +104,8 @@ const CONFIG = {
       name: "Wednesday",
       category: "main-a",
       logo: "bg3.png",
+      logoScale: 1,
+
       subtitle: "Baldur's Gate 3 - Collab",
       timeStart: "18:00",
       timeEnd: "22:00"
@@ -107,7 +115,10 @@ const CONFIG = {
       name: "Thursday",
       category: "main-b",
       logo: "elliot.png",
+
       logoOutline: true,
+      logoScale: 1,
+
       subtitle: "The Adventures of Elliot: The Millenium Tales",
       timeStart: "19:00",
       timeEnd: "22:00"
@@ -117,7 +128,10 @@ const CONFIG = {
       name: "Friday",
       category: "main-b",
       logo: "elliot.png",
+
       logoOutline: true,
+      logoScale: 1,
+
       subtitle: "The Adventures of Elliot: The Millenium Tales",
       timeStart: "19:00",
       timeEnd: "22:00"
@@ -127,7 +141,11 @@ const CONFIG = {
       name: "Saturday",
       category: "retro",
       logo: "ff6.png",
+
+      /* FFVI era demasiado pequeño */
       logoOutline: true,
+      logoScale: 1.8,
+
       subtitle: "Final Fantasy VI",
       timeStart: "19:00",
       timeEnd: "22:00"
@@ -137,11 +155,15 @@ const CONFIG = {
       name: "Sunday",
       category: "retro",
       logo: "ff6.png",
+
       logoOutline: true,
+      logoScale: 1.8,
+
       subtitle: "Final Fantasy VI",
       timeStart: "19:00",
       timeEnd: "22:00"
     }
+
   ]
 };
 
@@ -151,6 +173,7 @@ const CONFIG = {
    ============================================================ */
 
 const LAYOUT = {
+
   imgW: 1023,
   imgH: 1537,
 
@@ -190,20 +213,29 @@ const LAYOUT = {
   dayNameOff: 28,
   subtitleOff: 78,
 
+  /* Logos movidos un poco hacia la derecha */
+  logoLeft: 475,
+  logoWidth: 372,
+
   footnoteTop: 342,
   footnoteRight: 48
 };
 
 
 /* ============================================================
-   COLORES POR CATEGORÍA
+   COLORES
    ============================================================ */
 
 const CAT_COLORS = {
+
   "challenge": "#c8920a",
+
   "main-a": "#cc3030",
+
   "main-b": "#8844cc",
+
   "retro": "#3a9aaa"
+
 };
 
 
@@ -211,30 +243,29 @@ const CAT_COLORS = {
    DÍA ACTUAL
    ============================================================ */
 
-/*
-  JavaScript:
-  0 = domingo
-  1 = lunes
-  2 = martes
-  ...
-  6 = sábado
-
-  Nuestro array:
-  0 = lunes
-  ...
-  6 = domingo
-*/
-
 const JS_DAY = new Date().getDay();
 
+/*
+  JavaScript:
+  0 domingo
+  1 lunes
+  ...
+  6 sábado
+
+  CONFIG:
+  0 lunes
+  ...
+  6 domingo
+*/
+
 const DAY_MAP = [
-  6, // domingo
-  0, // lunes
-  1, // martes
-  2, // miércoles
-  3, // jueves
-  4, // viernes
-  5  // sábado
+  6,
+  0,
+  1,
+  2,
+  3,
+  4,
+  5
 ];
 
 const TODAY_I = DAY_MAP[JS_DAY];
@@ -259,22 +290,29 @@ function highlightRow(
     'brightness(1.8)';
 
   if (subEl) {
+
     subEl.style.filter =
       'brightness(1.8)';
 
     subEl.style.opacity =
       '1';
+
   }
 
   if (logoWrap) {
+
     logoWrap.style.filter =
       'brightness(1.3)';
+
   }
 
   times.forEach(e => {
+
     e.style.filter =
       'brightness(1.8)';
+
   });
+
 }
 
 
@@ -291,17 +329,26 @@ function unhighlightRow(
   nameEl.style.filter = '';
 
   if (subEl) {
+
     subEl.style.filter = '';
-    subEl.style.opacity = '0.9';
+
+    subEl.style.opacity =
+      '0.9';
+
   }
 
   if (logoWrap) {
+
     logoWrap.style.filter = '';
+
   }
 
   times.forEach(e => {
+
     e.style.filter = '';
+
   });
+
 }
 
 
@@ -319,7 +366,7 @@ window.addEventListener(
     const H = L.imgH;
 
 
-    /* CONTENEDOR PRINCIPAL */
+    /* CONTENEDOR */
 
     const container =
       document.createElement('div');
@@ -370,16 +417,21 @@ window.addEventListener(
       );
 
       if (className) {
+
         d.className =
           className;
+
       }
 
       if (text !== undefined) {
+
         d.textContent =
           text;
+
       }
 
       return d;
+
     }
 
 
@@ -388,48 +440,69 @@ window.addEventListener(
        ======================================================== */
 
     container.appendChild(
-      el(
-        {
-          position: 'absolute',
-          top: L.titleTop + 'px',
-          left: '0',
-          width: W + 'px',
 
-          textAlign: 'center',
+      el(
+
+        {
+
+          position: 'absolute',
+
+          top:
+            L.titleTop + 'px',
+
+          left: '0',
+
+          width:
+            W + 'px',
+
+          textAlign:
+            'center',
 
           fontSize:
             L.titleSize + 'px',
 
-          color: '#c8c0a0',
+          color:
+            '#c8c0a0',
 
           textShadow:
             '3px 3px 0 #000',
 
-          letterSpacing: '6px',
+          letterSpacing:
+            '6px',
 
-          lineHeight: '1.35',
+          lineHeight:
+            '1.35',
 
-          whiteSpace: 'pre-line'
+          whiteSpace:
+            'pre-line'
+
         },
 
         CONFIG.title
+
       )
+
     );
 
 
     /* ========================================================
-       SUBTÍTULO GENERAL
+       SUBTÍTULO
        ======================================================== */
 
     container.appendChild(
+
       el(
+
         {
-          position: 'absolute',
+
+          position:
+            'absolute',
 
           top:
             L.subtitleTop + 'px',
 
-          left: '0',
+          left:
+            '0',
 
           width:
             W + 'px',
@@ -445,10 +518,13 @@ window.addEventListener(
 
           letterSpacing:
             '3px'
+
         },
 
         CONFIG.subtitle
+
       )
+
     );
 
 
@@ -457,8 +533,11 @@ window.addEventListener(
        ======================================================== */
 
     container.appendChild(
+
       el(
+
         {
+
           position:
             'absolute',
 
@@ -479,10 +558,13 @@ window.addEventListener(
 
           textAlign:
             'right'
+
         },
 
         CONFIG.footnote
+
       )
+
     );
 
 
@@ -508,7 +590,7 @@ window.addEventListener(
 
 
         /* ====================================================
-           CONTENEDOR HOVER
+           HOVER
            ==================================================== */
 
         const rowDiv =
@@ -543,46 +625,75 @@ window.addEventListener(
             'logo-wrap';
 
           logoWrap.style.cssText = `
-            position: absolute;
-            top: ${rowTop}px;
-            left: 450px;
 
-            width: 397px;
-            height: ${L.rowHeights[i]}px;
+            position: absolute;
+
+            top:
+              ${rowTop}px;
+
+            left:
+              ${L.logoLeft}px;
+
+            width:
+              ${L.logoWidth}px;
+
+            height:
+              ${L.rowHeights[i]}px;
 
             overflow: hidden;
 
             display: flex;
+
             align-items: center;
+
             justify-content: center;
 
             pointer-events: none;
+
           `;
 
 
           const logoImg =
             document.createElement('img');
 
+
           logoImg.src =
             day.logo;
 
-          /*
-             Si logoOutline está activado,
-             añadimos el contorno blanco.
-          */
+
+          /* Contorno opcional */
 
           if (day.logoOutline) {
+
             logoImg.classList.add(
               'logo-outline'
             );
+
           }
 
 
+          /* Escala individual */
+
+          const logoScale =
+            day.logoScale || 1;
+
+
           logoImg.style.cssText += `
+
             max-width: 100%;
+
             max-height: 90px;
+
             object-fit: contain;
+
             margin-bottom: 20px;
+
+            transform:
+              scale(${logoScale});
+
+            transform-origin:
+              center center;
+
           `;
 
 
@@ -590,9 +701,11 @@ window.addEventListener(
             logoImg
           );
 
+
           container.appendChild(
             logoWrap
           );
+
         }
 
 
@@ -602,7 +715,9 @@ window.addEventListener(
 
         const nameEl =
           el(
+
             {
+
               position:
                 'absolute',
 
@@ -632,12 +747,15 @@ window.addEventListener(
 
               pointerEvents:
                 'none'
+
             },
 
             day.name,
 
             'day-name'
+
           );
+
 
         container.appendChild(
           nameEl
@@ -650,11 +768,14 @@ window.addEventListener(
 
         let subEl = null;
 
+
         if (day.subtitle) {
 
           subEl =
             el(
+
               {
+
                 position:
                   'absolute',
 
@@ -687,16 +808,20 @@ window.addEventListener(
 
                 pointerEvents:
                   'none'
+
               },
 
               day.subtitle,
 
               'day-sub'
+
             );
+
 
           container.appendChild(
             subEl
           );
+
         }
 
 
@@ -707,15 +832,18 @@ window.addEventListener(
         const rH =
           L.rowHeights[i];
 
+
         const tStartOff =
           Math.round(
             rH * 0.22
           );
 
+
         const tEndOff =
           Math.round(
             rH * 0.72
           );
+
 
         const tSepOff =
           Math.round(
@@ -723,11 +851,13 @@ window.addEventListener(
           );
 
 
-        /* HORA INICIO */
+        /* INICIO */
 
         const t1 =
           el(
+
             {
+
               position:
                 'absolute',
 
@@ -761,21 +891,28 @@ window.addEventListener(
 
               pointerEvents:
                 'none'
+
             },
 
             day.timeStart,
 
             'day-time'
+
           );
 
-        container.appendChild(t1);
+
+        container.appendChild(
+          t1
+        );
 
 
         /* SEPARADOR */
 
         const sep =
           el(
+
             {
+
               position:
                 'absolute',
 
@@ -806,21 +943,28 @@ window.addEventListener(
 
               pointerEvents:
                 'none'
+
             },
 
             '—',
 
             'day-time'
+
           );
 
-        container.appendChild(sep);
+
+        container.appendChild(
+          sep
+        );
 
 
-        /* HORA FIN */
+        /* FINAL */
 
         const t2 =
           el(
+
             {
+
               position:
                 'absolute',
 
@@ -854,14 +998,19 @@ window.addEventListener(
 
               pointerEvents:
                 'none'
+
             },
 
             day.timeEnd,
 
             'day-time'
+
           );
 
-        container.appendChild(t2);
+
+        container.appendChild(
+          t2
+        );
 
 
         const times = [
@@ -872,7 +1021,7 @@ window.addEventListener(
 
 
         /* ====================================================
-           HOVER
+           EVENTOS HOVER
            ==================================================== */
 
         rowDiv.addEventListener(
@@ -912,7 +1061,7 @@ window.addEventListener(
 
 
         /* ====================================================
-           DÍA DE HOY ILUMINADO POR DEFECTO
+           DÍA ACTUAL ILUMINADO
            ==================================================== */
 
         if (isToday) {
